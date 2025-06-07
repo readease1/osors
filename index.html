@@ -902,14 +902,15 @@
         // Handle clicks on the overlay (not the iframe)
         streamOverlay.addEventListener('click', function(e) {
             const rect = gameStream.getBoundingClientRect();
-            const x = Math.round(e.clientX - rect.left);
-            const y = Math.round(e.clientY - rect.top);
+            // Adjust for any padding/border offset
+            const x = Math.round(e.clientX - rect.left - 3); // Subtract border width
+            const y = Math.round(e.clientY - rect.top - 3);  // Subtract border width
             
             // Create click indicator
             const indicator = document.createElement('div');
             indicator.className = 'click-indicator';
-            indicator.style.left = x + 'px';
-            indicator.style.top = y + 'px';
+            indicator.style.left = (x + 3) + 'px'; // Add back for visual indicator
+            indicator.style.top = (y + 3) + 'px';
             streamOverlay.appendChild(indicator);
             
             // Remove indicator after animation
