@@ -28,18 +28,6 @@
             background: #1a1208;
         }
 
-        .stream-status {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.8);
-            color: #00FF00;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 12px;
-            z-index: 15;
-        }
-
         .header {
             grid-column: 1 / -1;
             background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
@@ -50,6 +38,18 @@
             justify-content: space-between;
             padding: 0 30px;
             box-shadow: inset 0 2px 4px rgba(255,215,0,0.3);
+        }
+
+        .stream-status {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #00FF00;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            z-index: 15;
         }
 
         .header h1 {
@@ -902,15 +902,15 @@
         // Handle clicks on the overlay (not the iframe)
         streamOverlay.addEventListener('click', function(e) {
             const rect = gameStream.getBoundingClientRect();
-            // Adjust for any padding/border offset
-            const x = Math.round(e.clientX - rect.left - 3); // Subtract border width
-            const y = Math.round(e.clientY - rect.top - 3);  // Subtract border width
+            // Adjust for any padding/border offset and add 100px left offset
+            const x = Math.round(e.clientX - rect.left - 3 - 100); // Subtract 100px to move clicks left
+            const y = Math.round(e.clientY - rect.top - 3);
             
-            // Create click indicator
+            // Create click indicator (show where they clicked, not where it goes)
             const indicator = document.createElement('div');
             indicator.className = 'click-indicator';
-            indicator.style.left = (x + 3) + 'px'; // Add back for visual indicator
-            indicator.style.top = (y + 3) + 'px';
+            indicator.style.left = (e.clientX - rect.left) + 'px'; // Show at actual click position
+            indicator.style.top = (e.clientY - rect.top) + 'px';
             streamOverlay.appendChild(indicator);
             
             // Remove indicator after animation
@@ -919,7 +919,7 @@
             }, 800);
             
             // Add to terminal
-            addTerminalMessage(`Click received: (${x}, ${y})`, 'click');
+            addTerminalMessage(`Click received: (${x}, ${y}) [offset applied]`, 'click');
             
             // Send click to backend
             sendClickToGame(x, y);
