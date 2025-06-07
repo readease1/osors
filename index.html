@@ -28,6 +28,18 @@
             background: #1a1208;
         }
 
+        .stream-status {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #00FF00;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            z-index: 15;
+        }
+
         .header {
             grid-column: 1 / -1;
             background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
@@ -71,6 +83,115 @@
             text-align: center;
             border-bottom: 2px solid #8B4513;
             padding-bottom: 8px;
+        }
+
+        .skill-group {
+            margin-bottom: 15px;
+        }
+
+        .skill-group-title {
+            color: #FFA500;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #654321;
+            padding-bottom: 3px;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 4px 0;
+            padding: 6px 10px;
+            background: rgba(139, 69, 19, 0.2);
+            border: 1px solid #654321;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .skill-item:hover {
+            background: rgba(139, 69, 19, 0.4);
+            border-color: #8B4513;
+        }
+
+        .skill-label {
+            color: #FFFFFF;
+            font-size: 12px;
+        }
+
+        .skill-level {
+            color: #00FF00;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .skill-tooltip {
+            position: absolute;
+            right: -250px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(145deg, #000, #1a1a1a);
+            border: 2px solid #8B4513;
+            border-radius: 6px;
+            padding: 12px;
+            width: 230px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+
+        .skill-item:hover .skill-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tooltip-skill-name {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .tooltip-level {
+            color: #00FF00;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .tooltip-xp {
+            color: #87CEEB;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .xp-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .xp-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #228B22, #32CD32);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .xp-progress-text {
+            color: #888;
+            font-size: 10px;
+            text-align: center;
         }
 
         .game-stream {
@@ -156,16 +277,61 @@
             background: #A0522D;
         }
 
-        .stream-status {
+        .arrow-controls {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.8);
-            color: #00FF00;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 12px;
+            bottom: 15px;
+            right: 15px;
             z-index: 15;
+            display: grid;
+            grid-template-columns: 40px 40px 40px;
+            grid-template-rows: 40px 40px 40px;
+            gap: 5px;
+        }
+
+        .arrow-btn {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #8B4513;
+            border-radius: 6px;
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .arrow-btn:hover {
+            background: rgba(139, 69, 19, 0.8);
+            border-color: #FFD700;
+            transform: scale(1.1);
+        }
+
+        .arrow-btn:active {
+            transform: scale(0.95);
+            background: rgba(160, 82, 45, 0.8);
+        }
+
+        .arrow-up {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .arrow-left {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .arrow-right {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        .arrow-down {
+            grid-column: 2;
+            grid-row: 3;
         }
 
         .click-indicator {
@@ -311,15 +477,344 @@
         <div class="header">
             <h1>$OSRS</h1>
             <div class="header-stats">
-                <div>Marketcap: $156.8K</div>
-                <div>Viewers: 247</div>
+                <div>Marketcap: Loading...</div>
+                <div>Viewers: Loading...</div>
             </div>
         </div>
 
         <!-- Current Stats -->
         <div class="current-stats">
             <div class="stats-title">CURRENT STATS</div>
-            <!-- Real stats will be populated from your OSRS client -->
+            
+            <div class="skill-group">
+                <div class="skill-group-title">Combat</div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Attack</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Attack</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Strength</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Strength</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Defence</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Defence</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Hitpoints</span>
+                    <span class="skill-level">10</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Hitpoints</div>
+                        <div class="tooltip-level">Level: 10</div>
+                        <div class="tooltip-xp">Experience: 1154 / 1210</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 95%"></div>
+                        </div>
+                        <div class="xp-progress-text">95% to level 11</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Ranged</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Ranged</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Prayer</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Prayer</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Magic</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Magic</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-group">
+                <div class="skill-group-title">Skills</div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Cooking</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Cooking</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Woodcutting</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Woodcutting</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Fletching</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Fletching</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Fishing</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Fishing</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Firemaking</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Firemaking</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Crafting</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Crafting</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Smithing</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Smithing</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Mining</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Mining</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Herblore</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Herblore</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Agility</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Agility</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Thieving</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Thieving</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Slayer</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Slayer</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Farming</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Farming</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Runecrafting</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Runecrafting</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Hunter</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Hunter</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <span class="skill-label">Construction</span>
+                    <span class="skill-level">1</span>
+                    <div class="skill-tooltip">
+                        <div class="tooltip-skill-name">Construction</div>
+                        <div class="tooltip-level">Level: 1</div>
+                        <div class="tooltip-xp">Experience: 0 / 83</div>
+                        <div class="xp-progress-bar">
+                            <div class="xp-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-progress-text">0% to level 2</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Game Stream -->
@@ -327,22 +822,24 @@
             <!-- Twitch Stream Embed (hidden UI) -->
             <iframe id="twitchEmbed" class="twitch-embed" src="" allowfullscreen></iframe>
             
-            <!-- Stream Controls -->
-            <div class="stream-controls">
-                <input type="text" id="twitchChannel" class="control-input" placeholder="Twitch channel" style="width: 120px;" value="cow714">
-                <button id="loadStream" class="load-btn">Load</button>
-            </div>
-            
             <!-- Clickable Overlay -->
             <div class="stream-overlay" id="streamOverlay"></div>
             
             <!-- Stream Status -->
-            <div class="stream-status" id="streamStatus">🔴 LIVE</div>
+            <div class="stream-status" id="streamStatus">LIVE</div>
+            
+            <!-- Arrow Key Controls -->
+            <div class="arrow-controls">
+                <button class="arrow-btn arrow-up" data-key="ArrowUp">↑</button>
+                <button class="arrow-btn arrow-left" data-key="ArrowLeft">←</button>
+                <button class="arrow-btn arrow-right" data-key="ArrowRight">→</button>
+                <button class="arrow-btn arrow-down" data-key="ArrowDown">↓</button>
+            </div>
             
             <!-- Placeholder (shown when no stream loaded) -->
             <div class="stream-placeholder" id="streamPlaceholder">
                 <h2>$OSRS Controller</h2>
-                <p>Enter your Twitch channel above to load stream</p>
+                <p>Loading stream...</p>
                 <p style="font-size: 14px; margin-top: 10px;">Click anywhere on stream to control!</p>
             </div>
         </div>
@@ -350,11 +847,7 @@
         <!-- Social Buttons -->
         <div class="social-section">
             <div class="social-title">SOCIAL & LINKS</div>
-            <button class="social-btn" onclick="openLink('twitter')">🐦 Follow on Twitter</button>
-            <button class="social-btn" onclick="openLink('telegram')">📱 Join Telegram</button>
-            <button class="social-btn" onclick="openLink('dexscreener')">📊 DexScreener</button>
-            <button class="social-btn" onclick="openLink('website')">🌐 Website</button>
-            <button class="social-btn" onclick="openLink('buy')">💰 Buy $OSRS</button>
+            <button class="social-btn" onclick="openLink('pump')">Pump.fun</button>
         </div>
 
         <!-- Live Terminal -->
@@ -381,8 +874,6 @@
         const terminalOutput = document.getElementById('terminalOutput');
         const chatMessages = document.getElementById('chatMessages');
         const twitchEmbed = document.getElementById('twitchEmbed');
-        const twitchChannel = document.getElementById('twitchChannel');
-        const loadStream = document.getElementById('loadStream');
         const streamPlaceholder = document.getElementById('streamPlaceholder');
         const streamOverlay = document.getElementById('streamOverlay');
         
@@ -407,17 +898,6 @@
             addTerminalMessage(`Loading Twitch stream: ${channel}`, 'system');
             addTerminalMessage('Stream loaded - clicks now control the game!', 'system');
         }
-
-        // Load Twitch stream button
-        loadStream.addEventListener('click', function() {
-            const channel = twitchChannel.value.trim();
-            if (!channel) {
-                addTerminalMessage('Please enter a Twitch channel name', 'system');
-                return;
-            }
-            
-            loadTwitchStream(channel);
-        });
 
         // Handle clicks on the overlay (not the iframe)
         streamOverlay.addEventListener('click', function(e) {
@@ -463,6 +943,33 @@
                 console.error('Error:', error);
             });
         }
+
+        function sendKeyToGame(key) {
+            fetch('http://localhost:8000/key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ key: key })
+            })
+            .then(response => response.json())
+            .then(data => {
+                addTerminalMessage(`Key sent: ${key} - ${data.success ? 'Success' : 'Failed'}`, 'click');
+            })
+            .catch(error => {
+                addTerminalMessage('Server connection failed!', 'system');
+                console.error('Error:', error);
+            });
+        }
+
+        // Arrow key controls
+        document.querySelectorAll('.arrow-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const key = this.getAttribute('data-key');
+                sendKeyToGame(key);
+                addTerminalMessage(`Arrow key pressed: ${key}`, 'click');
+            });
+        });
 
         function addTerminalMessage(message, type) {
             const timestamp = new Date().toLocaleTimeString();
