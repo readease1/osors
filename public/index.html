@@ -441,6 +441,81 @@
                 padding: 12px;
                 font-size: 1rem;
             }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Coming Soon Section Styles */
+        .coming-soon-section {
+            margin-top: 40px;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-top: 3px solid #c9b037;
+        }
+
+        .coming-soon-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .coming-soon-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #ffff00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 30px;
+            font-family: 'Times New Roman', serif;
+            background: linear-gradient(45deg, #ffff00, #c9b037, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #c9b037;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #ffff00;
+            box-shadow: 0 10px 25px rgba(201, 176, 55, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            color: #c9b037;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-family: 'Times New Roman', serif;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .feature-card p {
+            color: #ffff00;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
     </style>
 </head>
@@ -492,6 +567,45 @@
 
                 <h3>🔗 Connect with Us:</h3>
                 <p>Follow <strong>@pumpplaysosrs</strong> on Twitter for updates, announcements, and community events. Join the revolution of collaborative gaming!</p>
+            </div>
+        </div>
+
+        <!-- Coming Soon Section -->
+        <div class="coming-soon-section">
+            <div class="coming-soon-container">
+                <h2 class="coming-soon-title">🚀 Coming Soon</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Live OSRS Level Updates</h3>
+                        <p>Real-time skill progression tracking and live level notifications as the community levels up together</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3>Advanced API Integration</h3>
+                        <p>Deep OSRS hiscores integration, quest progress tracking, and automated achievement announcements</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔥</div>
+                        <h3>$OSRS Token Burns & Sinks</h3>
+                        <p>Revolutionary tokenomics with in-game milestone burns, community vote sinks, and deflationary mechanics</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Community Voting System</h3>
+                        <p>Token-weighted governance for major decisions, quest choices, and character progression paths</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💎</div>
+                        <h3>Exclusive Token Rewards</h3>
+                        <p>Earn $OSRS tokens for contributing to milestones, discovering rare drops, and community achievements</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3>Advanced Analytics Dashboard</h3>
+                        <p>Comprehensive stats, player contribution metrics, and tokenomics visualization for holders</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
