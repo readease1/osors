@@ -12,7 +12,7 @@ from pynput.keyboard import Key
 import sys
 
 # Your Heroku app URL - UPDATE THIS WITH YOUR ACTUAL HEROKU APP NAME!
-SERVER_URL = 'https://cow714-osrs-controller.herokuapp.com'
+SERVER_URL = 'https://cow714-osrs-controller-221dee6aaaf8.herokuapp.com/'
 
 # Game window coordinates - ADJUST THESE FOR YOUR SETUP!
 # Use 'python pc_client.py mouse' to help find these coordinates
