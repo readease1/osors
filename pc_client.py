@@ -22,9 +22,9 @@ GAME_WINDOW = {
     'height': 456  # Height: 482 - 26 = 456
 }
 
-# Click offset adjustments (fine-tune these if clicks are still off)
-CLICK_OFFSET_X = 3  # Adjust if clicks are too far left (-) or right (+)
-CLICK_OFFSET_Y = 8  # Adjust if clicks are too high (-) or low (+)
+# Click offset adjustments - MAJOR FIXES NEEDED
+CLICK_OFFSET_X = -15  # Much more left adjustment 
+CLICK_OFFSET_Y = -10  # Much more up adjustment
 
 # Safety settings
 pyautogui.PAUSE = 0.1  # Pause between actions
@@ -34,32 +34,36 @@ pyautogui.FAILSAFE = True  # Move mouse to top-left corner to stop
 sio = socketio.Client(logger=False, engineio_logger=False)
 
 def execute_arrow_key(direction):
-    """Execute arrow key press for camera movement"""
+    """Execute arrow key press for camera movement - FIXED FOR OSRS"""
     try:
         # Ensure OSRS window is focused first
         focus_osrs_window()
         
-        key_map = {
-            'up': Key.up,
-            'down': Key.down,
-            'left': Key.left,
-            'right': Key.right
-        }
+        # OSRS uses different keys for camera rotation!
+        # Arrow keys don't work in OSRS - need to use mouse for camera
+        # Let's simulate mouse drag for camera movement instead
         
-        if direction in key_map:
-            with keyboard.Controller() as kb:
-                # Press and hold for longer duration for OSRS camera movement
-                kb.press(key_map[direction])
-                time.sleep(0.2)  # Hold longer for camera rotation
-                kb.release(key_map[direction])
-            print(f"✅ Arrow key: {direction}")
-            return True
+        if direction == 'up':
+            # Mouse drag up for camera pitch
+            start_x = GAME_WINDOW['x'] + GAME_WINDOW['width'] // 2
+            start_y = GAME_WINDOW['y'] + GAME_WINDOW['height'] // 2
+            pyautogui.drag(0, -50, duration=0.3, button='middle')
+        elif direction == 'down':
+            pyautogui.drag(0, 50, duration=0.3, button='middle')
+        elif direction == 'left':
+            # Mouse drag left for camera yaw
+            pyautogui.drag(-50, 0, duration=0.3, button='middle')
+        elif direction == 'right':
+            pyautogui.drag(50, 0, duration=0.3, button='middle')
         else:
-            print(f"❌ Unknown arrow key: {direction}")
+            print(f"❌ Unknown direction: {direction}")
             return False
             
+        print(f"✅ Camera moved: {direction}")
+        return True
+            
     except Exception as e:
-        print(f"❌ Error with arrow key {direction}: {e}")
+        print(f"❌ Error with camera movement {direction}: {e}")
         return False
 
 def execute_click(click_type, x=None, y=None):
@@ -223,7 +227,36 @@ def focus_osrs_window():
     except Exception as e:
         print(f"⚠️ Could not focus OSRS window: {e}")
 
-def test_coordinate_accuracy():
+def debug_click_position():
+    """Debug function to see exactly where clicks land"""
+    print("🔍 Debug mode: Click test in 3 seconds...")
+    print("Watch your inventory area carefully!")
+    time.sleep(3)
+    
+    # Test click on what should be the logs position
+    # Based on your screenshot, logs appear to be around 25% from left, 65% from top
+    logs_x = 0.25  # 25% from left edge
+    logs_y = 0.65  # 65% from top edge
+    
+    print(f"Testing click at logs position: {logs_x}, {logs_y}")
+    execute_direct_click(logs_x, logs_y)
+    
+    time.sleep(2)
+    
+    # Test a few other positions to see the pattern
+    test_positions = [
+        (0.2, 0.6, "Left of logs"),
+        (0.3, 0.6, "Right of logs"), 
+        (0.25, 0.55, "Above logs"),
+        (0.25, 0.7, "Below logs")
+    ]
+    
+    for x, y, desc in test_positions:
+        print(f"Testing {desc}: {x}, {y}")
+        execute_direct_click(x, y)
+        time.sleep(1)
+    
+    print("🔍 Debug test complete! Check where each click landed.")
     """Test function to check if clicks are accurate"""
     print("🧪 Testing coordinate accuracy...")
     print("Click test will happen in 3 seconds - watch your OSRS window!")
@@ -381,6 +414,9 @@ if __name__ == '__main__':
         elif sys.argv[1] == 'mouse':
             print("🖱️  Mouse coordinate finder...")
             get_mouse_position()
+        elif sys.argv[1] == 'debug':
+            print("🔍 Debug click positions...")
+            debug_click_position()
         elif sys.argv[1] == 'coords':
             print("🎯 Testing coordinate accuracy...")
             test_coordinate_accuracy()
@@ -390,6 +426,7 @@ if __name__ == '__main__':
             print("  python pc_client.py        - Run the client")
             print("  python pc_client.py test   - Test commands")
             print("  python pc_client.py mouse  - Get mouse coordinates")
+            print("  python pc_client.py debug   - Debug inventory clicking")
             print("  python pc_client.py coords  - Test coordinate accuracy")
             print("  python pc_client.py help   - Show this help")
         else:
