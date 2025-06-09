@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Plays OSRS - cow714</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ff6b35;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            color: #b3b3b3;
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stream-section {
+            flex: 1;
+            min-width: 800px;
+            position: relative;
+        }
+
+        .stream-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #ff6b35;
+        }
+
+        .stream-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .stream-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .click-zone {
+            position: absolute;
+            background: rgba(255, 107, 53, 0.1);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 8px;
+            pointer-events: all;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .click-zone:hover {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: rgba(255, 107, 53, 0.6);
+            transform: scale(1.05);
+        }
+
+        .click-zone.active {
+            background: rgba(255, 107, 53, 0.4);
+            border-color: #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+        }
+
+        .controls-panel {
+            flex: 0 0 350px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            height: fit-content;
+        }
+
+        .control-section {
+            margin-bottom: 30px;
+        }
+
+        .control-section h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .movement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+        .control-btn {
+            background: linear-gradient(145deg, #2a2a3e, #1a1a2e);
+            border: 2px solid #ff6b35;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-align: center;
+            user-select: none;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(145deg, #ff6b35, #f7931e);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.6);
+        }
+
+        .control-btn.spacer {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .control-btn.spacer:hover {
+            background: transparent;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .status-panel {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .command-queue {
+            max-height: 100px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .queue-item {
+            padding: 2px 0;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .stream-section {
+                min-width: unset;
+            }
+            
+            .controls-panel {
+                flex: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls-panel {
+                padding: 20px;
+            }
+            
+            .movement-grid {
+                gap: 8px;
+            }
+            
+            .control-btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎮 Community Plays OSRS</h1>
+        <p>Help cow714 navigate Old School RuneScape together!</p>
+    </div>
+
+    <div class="main-container">
+        <div class="stream-section">
+            <div class="stream-container">
+                <iframe
+                    src="https://player.twitch.tv/?channel=cow714&parent=localhost&parent=127.0.0.1&parent=claude.ai&parent=herokuapp.com"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    scrolling="no">
+                </iframe>
+                
+                <div class="stream-overlay">
+                    <!-- Interactive zones for game area -->
+                    <div class="click-zone" style="top: 20%; left: 20%; width: 15%; height: 15%;" data-action="click-inventory"></div>
+                    <div class="click-zone" style="top: 40%; left: 40%; width: 20%; height: 20%;" data-action="click-game-area"></div>
+                    <div class="click-zone" style="top: 20%; right: 20%; width: 15%; height: 15%;" data-action="click-minimap"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="control-section">
+                <h3>🎯 Camera Control</h3>
+                <div class="movement-grid">
+                    <div class="control-btn spacer"></div>
+                    <div class="control-btn" data-key="up">↑</div>
+                    <div class="control-btn spacer"></div>
+                    <div class="control-btn" data-key="left">←</div>
+                    <div class="control-btn" data-key="center">⊙</div>
+                    <div class="control-btn" data-key="right">→</div>
+                    <div class="control-btn spacer"></div>
+                    <div class="control-btn" data-key="down">↓</div>
+                    <div class="control-btn spacer"></div>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>🖱️ Click Controls</h3>
+                <div class="action-buttons">
+                    <div class="control-btn" data-action="left-click">Left Click</div>
+                    <div class="control-btn" data-action="right-click">Right Click</div>
+                </div>
+            </div>
+
+            <div class="status-panel">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Connected to cow714</span>
+                </div>
+                <div style="font-size: 0.9rem; opacity: 0.8;">
+                    <div>Players online: <span id="player-count">1</span></div>
+                    <div>Commands sent: <span id="command-count">0</span></div>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <strong>Recent Commands:</strong>
+                    <div class="command-queue" id="command-queue">
+                        <div class="queue-item">Waiting for commands...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // WebSocket connection to backend
+        const socket = io();
+        let commandCount = 0;
+        let playerCount = 1;
+        
+        // Connection status handling
+        socket.on('connect', () => {
+            console.log('✅ Connected to server');
+            updateConnectionStatus(true);
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('❌ Disconnected from server');
+            updateConnectionStatus(false);
+        });
+        
+        // Server event handlers
+        socket.on('user_count_update', (count) => {
+            playerCount = count;
+            document.getElementById('player-count').textContent = playerCount;
+        });
+        
+        socket.on('command_queued', (data) => {
+            console.log('Command queued:', data);
+        });
+        
+        socket.on('command_executed', (data) => {
+            console.log('Command executed:', data.command);
+        });
+        
+        socket.on('queue_update', (data) => {
+            if (data.lastCommand) {
+                const queue = document.getElementById('command-queue');
+                const item = document.createElement('div');
+                item.className = 'queue-item';
+                item.textContent = `${data.lastCommand.user}: ${data.lastCommand.action}`;
+                
+                queue.insertBefore(item, queue.firstChild);
+                
+                // Keep only last 5 commands
+                while (queue.children.length > 5) {
+                    queue.removeChild(queue.lastChild);
+                }
+            }
+        });
+        
+        socket.on('rate_limited', (data) => {
+            console.warn('Rate limited:', data.message);
+            showNotification('Please wait before sending another command', 'warning');
+        });
+        
+        socket.on('queue_full', (data) => {
+            console.warn('Queue full:', data.message);
+            showNotification('Command queue is full, try again later', 'warning');
+        });
+        
+        function updateConnectionStatus(connected) {
+            const statusDot = document.querySelector('.status-dot');
+            const statusText = statusDot.nextElementSibling;
+            
+            if (connected) {
+                statusDot.style.background = '#4CAF50';
+                statusText.textContent = 'Connected to cow714';
+            } else {
+                statusDot.style.background = '#f44336';
+                statusText.textContent = 'Disconnected';
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Simple notification system
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'warning' ? '#ff9800' : '#2196F3'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                font-weight: bold;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function sendCommand(action, data = {}) {
+            // Send command to WebSocket server
+            const command = {
+                action: action,
+                data: data,
+                timestamp: Date.now()
+            };
+            
+            socket.emit('command', command);
+            
+            // Update local command count
+            commandCount++;
+            document.getElementById('command-count').textContent = commandCount;
+            
+            console.log('Sending command:', command);
+        }
+
+        // Movement controls
+        document.querySelectorAll('[data-key]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const key = btn.dataset.key;
+                btn.classList.add('active');
+                setTimeout(() => btn.classList.remove('active'), 200);
+                sendCommand('key_press', { key: key });
+            });
+        });
+
+        // Action buttons
+        document.querySelectorAll('[data-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                btn.classList.add('active');
+                setTimeout(() => btn.classList.remove('active'), 200);
+                sendCommand('action', { type: action });
+            });
+        });
+
+        // Stream overlay click zones
+        document.querySelectorAll('.click-zone').forEach(zone => {
+            zone.addEventListener('click', (e) => {
+                const rect = zone.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                zone.classList.add('active');
+                setTimeout(() => zone.classList.remove('active'), 300);
+                
+                sendCommand('stream_click', {
+                    zone: zone.dataset.action,
+                    x: x / rect.width,
+                    y: y / rect.height
+                });
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            const keyMap = {
+                'ArrowUp': 'up',
+                'ArrowDown': 'down',
+                'ArrowLeft': 'left',
+                'ArrowRight': 'right'
+            };
+            
+            if (keyMap[e.code]) {
+                e.preventDefault();
+                sendCommand('key_press', { key: keyMap[e.code] });
+                
+                // Visual feedback
+                const btn = document.querySelector(`[data-key="${keyMap[e.code]}"]`);
+                if (btn) {
+                    btn.classList.add('active');
+                    setTimeout(() => btn.classList.remove('active'), 200);
+                }
+            }
+        });
+
+        console.log('🎮 Community OSRS Controller loaded!');
+        console.log('💡 Next steps:');
+        console.log('1. Set up WebSocket server');
+        console.log('2. Install AutoHotkey or similar on your PC');
+        console.log('3. Create input handling script');
+        console.log('4. Add rate limiting and moderation');
+    </script>
+</body>
+</html>
