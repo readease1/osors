@@ -23,8 +23,8 @@ GAME_WINDOW = {
 }
 
 # Click offset adjustments (fine-tune these if clicks are still off)
-CLICK_OFFSET_X = -2  # Adjust if clicks are too far left (-) or right (+)
-CLICK_OFFSET_Y = 3  # Adjust if clicks are too high (-) or low (+)
+CLICK_OFFSET_X = -4  # Adjust if clicks are too far left (-) or right (+)
+CLICK_OFFSET_Y = -1  # Adjust if clicks are too high (-) or low (+)
 
 # Safety settings
 pyautogui.PAUSE = 0.1  # Pause between actions
