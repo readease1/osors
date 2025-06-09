@@ -12,7 +12,7 @@ from pynput.keyboard import Key
 import sys
 
 # Your Heroku app URL - UPDATE THIS WITH YOUR ACTUAL HEROKU APP NAME!
-SERVER_URL = 'https://cow714-osrs-controller-221dee6aaaf8.herokuapp.com/'
+SERVER_URL = 'https://cow714-osrs-controller.herokuapp.com'
 
 # Game window coordinates - ADJUST THESE FOR YOUR SETUP!
 # Use 'python pc_client.py mouse' to help find these coordinates
@@ -84,22 +84,22 @@ def execute_click(click_type, x=None, y=None):
         print(f"❌ Error with click {click_type}: {e}")
         return False
 
-def execute_stream_click(zone, rel_x, rel_y):
-    """Execute click on stream overlay zone"""
+def execute_direct_click(rel_x, rel_y):
+    """Execute direct click on game window at exact coordinates"""
     try:
-        # Convert relative coordinates to absolute screen coordinates
+        # Convert relative coordinates (0-1) to absolute screen coordinates
         abs_x = GAME_WINDOW['x'] + (rel_x * GAME_WINDOW['width'])
         abs_y = GAME_WINDOW['y'] + (rel_y * GAME_WINDOW['height'])
         
         # Execute the click
         pyautogui.click(abs_x, abs_y)
-        print(f"✅ Stream zone '{zone}' clicked at ({abs_x:.0f}, {abs_y:.0f})")
+        print(f"✅ Direct click at ({abs_x:.0f}, {abs_y:.0f}) - {rel_x:.3f}, {rel_y:.3f}")
         
         time.sleep(0.1)
         return True
         
     except Exception as e:
-        print(f"❌ Error with stream click: {e}")
+        print(f"❌ Error with direct click: {e}")
         return False
 
 @sio.event
@@ -151,13 +151,22 @@ def on_command(command_data):
             else:
                 error_msg = f"Unknown action type: {action_type}"
                 
+        elif action == 'direct_click':
+            # Handle direct clicks on the stream (exact coordinates)
+            x = data.get('x')
+            y = data.get('y')
+            if x is not None and y is not None:
+                success = execute_direct_click(x, y)
+            else:
+                error_msg = "Invalid direct click coordinates"
+                
         elif action == 'stream_click':
-            # Handle clicks on stream overlay
+            # Handle clicks on stream overlay (legacy support)
             zone = data.get('zone')
             x = data.get('x')
             y = data.get('y')
             if zone and x is not None and y is not None:
-                success = execute_stream_click(zone, x, y)
+                success = execute_direct_click(x, y)  # Use same function now
             else:
                 error_msg = "Invalid stream click data"
                 
