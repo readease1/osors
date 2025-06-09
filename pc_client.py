@@ -22,6 +22,10 @@ GAME_WINDOW = {
     'height': 456  # Height: 482 - 26 = 456
 }
 
+# Click offset adjustments (fine-tune these if clicks are still off)
+CLICK_OFFSET_X = 3  # Adjust if clicks are too far left (-) or right (+)
+CLICK_OFFSET_Y = 8  # Adjust if clicks are too high (-) or low (+)
+
 # Safety settings
 pyautogui.PAUSE = 0.1  # Pause between actions
 pyautogui.FAILSAFE = True  # Move mouse to top-left corner to stop
@@ -87,14 +91,18 @@ def execute_direct_click(rel_x, rel_y):
     """Execute direct click on game window at exact coordinates"""
     try:
         # Convert relative coordinates (0-1) to absolute screen coordinates
-        abs_x = GAME_WINDOW['x'] + (rel_x * GAME_WINDOW['width'])
-        abs_y = GAME_WINDOW['y'] + (rel_y * GAME_WINDOW['height'])
+        # Add small offset adjustments to fix the "up and left" issue
+        abs_x = GAME_WINDOW['x'] + (rel_x * GAME_WINDOW['width']) + CLICK_OFFSET_X
+        abs_y = GAME_WINDOW['y'] + (rel_y * GAME_WINDOW['height']) + CLICK_OFFSET_Y
         
-        # Execute the click
+        # Ensure OSRS window is focused before clicking
+        focus_osrs_window()
+        
+        # Execute the click with a slight delay for better object recognition
         pyautogui.click(abs_x, abs_y)
-        print(f"✅ Direct click at ({abs_x:.0f}, {abs_y:.0f}) - {rel_x:.3f}, {rel_y:.3f}")
+        print(f"✅ Direct click at ({abs_x:.0f}, {abs_y:.0f}) - rel: {rel_x:.3f}, {rel_y:.3f}")
         
-        time.sleep(0.1)
+        time.sleep(0.15)  # Slightly longer delay for object interaction
         return True
         
     except Exception as e:
@@ -197,7 +205,41 @@ def on_command(command_data):
             'timestamp': time.time()
         })
 
+def focus_osrs_window():
+    """Ensure OSRS window is focused for proper object interaction"""
+    try:
+        # Click on the OSRS window title bar to focus it
+        title_bar_x = GAME_WINDOW['x'] + (GAME_WINDOW['width'] // 2)
+        title_bar_y = GAME_WINDOW['y'] - 10  # Above the game area
+        
+        # Quick focus click (won't interfere with game)
+        pyautogui.click(title_bar_x, title_bar_y)
+        time.sleep(0.05)  # Brief pause for focus
+        
+    except Exception as e:
+        print(f"⚠️ Could not focus OSRS window: {e}")
+
 def get_mouse_position():
+    """Test function to check if clicks are accurate"""
+    print("🧪 Testing coordinate accuracy...")
+    print("Click test will happen in 3 seconds - watch your OSRS window!")
+    time.sleep(3)
+    
+    # Test clicks at different positions
+    test_positions = [
+        (0.1, 0.1, "Top-left area"),
+        (0.5, 0.5, "Center"),
+        (0.9, 0.9, "Bottom-right area"),
+        (0.25, 0.75, "Inventory area (if visible)")
+    ]
+    
+    for rel_x, rel_y, description in test_positions:
+        print(f"Testing {description}...")
+        execute_direct_click(rel_x, rel_y)
+        time.sleep(1)
+    
+    print("✅ Coordinate test complete!")
+    print("💡 If clicks are still off, adjust CLICK_OFFSET_X and CLICK_OFFSET_Y")
     """Utility function to help find game window coordinates"""
     print("🖱️  Position your OSRS window, then move mouse to find coordinates:")
     print("   1. Move to TOP-LEFT corner of game area")
@@ -313,12 +355,16 @@ if __name__ == '__main__':
         elif sys.argv[1] == 'mouse':
             print("🖱️  Mouse coordinate finder...")
             get_mouse_position()
+        elif sys.argv[1] == 'coords':
+            print("🎯 Testing coordinate accuracy...")
+            test_coordinate_accuracy()
         elif sys.argv[1] == 'help':
             print("🎮 cow714 OSRS PC Client")
             print("Usage:")
             print("  python pc_client.py        - Run the client")
             print("  python pc_client.py test   - Test commands")
             print("  python pc_client.py mouse  - Get mouse coordinates")
+            print("  python pc_client.py coords  - Test coordinate accuracy")
             print("  python pc_client.py help   - Show this help")
         else:
             print("❌ Unknown command. Use 'help' for usage.")
