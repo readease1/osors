@@ -23,8 +23,8 @@ GAME_WINDOW = {
 }
 
 # Click offset adjustments (fine-tune these if clicks are still off)
-CLICK_OFFSET_X = -4  # Adjust if clicks are too far left (-) or right (+)
-CLICK_OFFSET_Y = -1  # Adjust if clicks are too high (-) or low (+)
+CLICK_OFFSET_X = 3  # Adjust if clicks are too far left (-) or right (+)
+CLICK_OFFSET_Y = 8  # Adjust if clicks are too high (-) or low (+)
 
 # Safety settings
 pyautogui.PAUSE = 0.1  # Pause between actions
@@ -36,6 +36,9 @@ sio = socketio.Client(logger=False, engineio_logger=False)
 def execute_arrow_key(direction):
     """Execute arrow key press for camera movement"""
     try:
+        # Ensure OSRS window is focused first
+        focus_osrs_window()
+        
         key_map = {
             'up': Key.up,
             'down': Key.down,
@@ -45,8 +48,9 @@ def execute_arrow_key(direction):
         
         if direction in key_map:
             with keyboard.Controller() as kb:
+                # Press and hold for longer duration for OSRS camera movement
                 kb.press(key_map[direction])
-                time.sleep(0.05)  # Brief hold
+                time.sleep(0.2)  # Hold longer for camera rotation
                 kb.release(key_map[direction])
             print(f"✅ Arrow key: {direction}")
             return True
