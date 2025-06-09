@@ -270,7 +270,7 @@
         <div class="stream-section">
             <div class="stream-container">
                 <iframe
-                    src="https://player.twitch.tv/?channel=cow714&parent=localhost&parent=127.0.0.1&parent=claude.ai"
+                    src="https://player.twitch.tv/?channel=cow714&parent=localhost&parent=127.0.0.1&parent=claude.ai&parent=herokuapp.com"
                     frameborder="0"
                     allowfullscreen="true"
                     scrolling="no">
@@ -329,46 +329,114 @@
         </div>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Simulated WebSocket connection (replace with real implementation)
+        // WebSocket connection to backend
+        const socket = io();
         let commandCount = 0;
-        let playerCount = Math.floor(Math.random() * 50) + 1;
+        let playerCount = 1;
         
-        // Update player count periodically
-        setInterval(() => {
-            playerCount += Math.floor(Math.random() * 3) - 1;
-            playerCount = Math.max(1, playerCount);
+        // Connection status handling
+        socket.on('connect', () => {
+            console.log('✅ Connected to server');
+            updateConnectionStatus(true);
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('❌ Disconnected from server');
+            updateConnectionStatus(false);
+        });
+        
+        // Server event handlers
+        socket.on('user_count_update', (count) => {
+            playerCount = count;
             document.getElementById('player-count').textContent = playerCount;
-        }, 5000);
+        });
+        
+        socket.on('command_queued', (data) => {
+            console.log('Command queued:', data);
+        });
+        
+        socket.on('command_executed', (data) => {
+            console.log('Command executed:', data.command);
+        });
+        
+        socket.on('queue_update', (data) => {
+            if (data.lastCommand) {
+                const queue = document.getElementById('command-queue');
+                const item = document.createElement('div');
+                item.className = 'queue-item';
+                item.textContent = `${data.lastCommand.user}: ${data.lastCommand.action}`;
+                
+                queue.insertBefore(item, queue.firstChild);
+                
+                // Keep only last 5 commands
+                while (queue.children.length > 5) {
+                    queue.removeChild(queue.lastChild);
+                }
+            }
+        });
+        
+        socket.on('rate_limited', (data) => {
+            console.warn('Rate limited:', data.message);
+            showNotification('Please wait before sending another command', 'warning');
+        });
+        
+        socket.on('queue_full', (data) => {
+            console.warn('Queue full:', data.message);
+            showNotification('Command queue is full, try again later', 'warning');
+        });
+        
+        function updateConnectionStatus(connected) {
+            const statusDot = document.querySelector('.status-dot');
+            const statusText = statusDot.nextElementSibling;
+            
+            if (connected) {
+                statusDot.style.background = '#4CAF50';
+                statusText.textContent = 'Connected to cow714';
+            } else {
+                statusDot.style.background = '#f44336';
+                statusText.textContent = 'Disconnected';
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Simple notification system
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'warning' ? '#ff9800' : '#2196F3'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                font-weight: bold;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
 
         function sendCommand(action, data = {}) {
-            commandCount++;
-            document.getElementById('command-count').textContent = commandCount;
-            
+            // Send command to WebSocket server
             const command = {
                 action: action,
                 data: data,
-                timestamp: Date.now(),
-                user: 'Anonymous' + Math.floor(Math.random() * 1000)
+                timestamp: Date.now()
             };
             
-            // Add to command queue display
-            const queue = document.getElementById('command-queue');
-            const item = document.createElement('div');
-            item.className = 'queue-item';
-            item.textContent = `${command.user}: ${action}`;
+            socket.emit('command', command);
             
-            queue.insertBefore(item, queue.firstChild);
-            
-            // Keep only last 5 commands
-            while (queue.children.length > 5) {
-                queue.removeChild(queue.lastChild);
-            }
+            // Update local command count
+            commandCount++;
+            document.getElementById('command-count').textContent = commandCount;
             
             console.log('Sending command:', command);
-            
-            // Here you would send to your WebSocket server
-            // ws.send(JSON.stringify(command));
         }
 
         // Movement controls
