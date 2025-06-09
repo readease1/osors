@@ -14,13 +14,12 @@ import sys
 # Your Heroku app URL - UPDATE THIS WITH YOUR ACTUAL HEROKU APP NAME!
 SERVER_URL = 'https://cow714-osrs-controller.herokuapp.com'
 
-# Game window coordinates - ADJUST THESE FOR YOUR SETUP!
-# Use 'python pc_client.py mouse' to help find these coordinates
+# Game window coordinates - UPDATED WITH YOUR ACTUAL OSRS WINDOW!
 GAME_WINDOW = {
-    'x': 100,      # Left edge of your OSRS window
-    'y': 100,      # Top edge of your OSRS window  
-    'width': 800,  # Width of your OSRS window
-    'height': 600  # Height of your OSRS window
+    'x': 554,      # Left edge of your OSRS window
+    'y': 26,       # Top edge of your OSRS window  
+    'width': 766,  # Width: 1320 - 554 = 766
+    'height': 456  # Height: 482 - 26 = 456
 }
 
 # Safety settings
