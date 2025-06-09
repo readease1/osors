@@ -219,6 +219,28 @@ def focus_osrs_window():
     except Exception as e:
         print(f"⚠️ Could not focus OSRS window: {e}")
 
+def test_coordinate_accuracy():
+    """Test function to check if clicks are accurate"""
+    print("🧪 Testing coordinate accuracy...")
+    print("Click test will happen in 3 seconds - watch your OSRS window!")
+    time.sleep(3)
+    
+    # Test clicks at different positions
+    test_positions = [
+        (0.1, 0.1, "Top-left area"),
+        (0.5, 0.5, "Center"),
+        (0.9, 0.9, "Bottom-right area"),
+        (0.25, 0.75, "Inventory area (if visible)")
+    ]
+    
+    for rel_x, rel_y, description in test_positions:
+        print(f"Testing {description}...")
+        execute_direct_click(rel_x, rel_y)
+        time.sleep(1)
+    
+    print("✅ Coordinate test complete!")
+    print("💡 If clicks are still off, adjust CLICK_OFFSET_X and CLICK_OFFSET_Y")
+
 def get_mouse_position():
     """Test function to check if clicks are accurate"""
     print("🧪 Testing coordinate accuracy...")
