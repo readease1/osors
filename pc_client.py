@@ -12,7 +12,7 @@ from pynput.keyboard import Key
 import sys
 
 # Your Heroku app URL - UPDATE THIS WITH YOUR ACTUAL HEROKU APP NAME!
-SERVER_URL = 'https://www.pumpplaysosrs.xyz'
+SERVER_URL = 'https://www.bonkplaysrs.com'
 
 # Game window coordinates - UPDATED WITH YOUR ACTUAL OSRS WINDOW!
 GAME_WINDOW = {
