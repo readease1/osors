@@ -75,6 +75,16 @@
             width: 100%;
             height: 100%;
         }
+        
+        /* Hide Twitch UI elements */
+        .stream-container {
+            overflow: hidden;
+        }
+        
+        .stream-container iframe {
+            transform: scale(1.1);
+            transform-origin: center;
+        }
 
         .stream-overlay {
             position: absolute;
@@ -83,7 +93,7 @@
             width: 100%;
             height: 100%;
             z-index: 10;
-            pointer-events: none;
+            cursor: crosshair;
         }
 
         .click-zone {
@@ -95,6 +105,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(2px);
+            display: none; /* Hidden since we're using full overlay now */
         }
 
         .click-zone:hover {
@@ -270,17 +281,14 @@
         <div class="stream-section">
             <div class="stream-container">
                 <iframe
-                    src="https://player.twitch.tv/?channel=cow714&parent=localhost&parent=127.0.0.1&parent=claude.ai&parent=herokuapp.com&parent=cow714-osrs-controller-221dee6aaaf8.herokuapp.com"
+                    src="https://player.twitch.tv/?channel=cow714&parent=localhost&parent=127.0.0.1&parent=claude.ai&parent=herokuapp.com&parent=cow714-osrs-controller-221dee6aaaf8.herokuapp.com&controls=false&muted=false"
                     frameborder="0"
                     allowfullscreen="true"
                     scrolling="no">
                 </iframe>
                 
-                <div class="stream-overlay">
-                    <!-- Interactive zones for game area -->
-                    <div class="click-zone" style="top: 20%; left: 20%; width: 15%; height: 15%;" data-action="click-inventory"></div>
-                    <div class="click-zone" style="top: 40%; left: 40%; width: 20%; height: 20%;" data-action="click-game-area"></div>
-                    <div class="click-zone" style="top: 20%; right: 20%; width: 15%; height: 15%;" data-action="click-minimap"></div>
+                <div class="stream-overlay" id="stream-overlay">
+                    <!-- Entire overlay is now clickable for direct game interaction -->
                 </div>
             </div>
         </div>
@@ -459,21 +467,18 @@
             });
         });
 
-        // Stream overlay click zones
-        document.querySelectorAll('.click-zone').forEach(zone => {
-            zone.addEventListener('click', (e) => {
-                const rect = zone.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                zone.classList.add('active');
-                setTimeout(() => zone.classList.remove('active'), 300);
-                
-                sendCommand('stream_click', {
-                    zone: zone.dataset.action,
-                    x: x / rect.width,
-                    y: y / rect.height
-                });
+        // Direct stream clicking for exact game coordinates
+        document.getElementById('stream-overlay').addEventListener('click', (e) => {
+            const rect = e.target.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;  // Convert to 0-1 range
+            const y = (e.clientY - rect.top) / rect.height;   // Convert to 0-1 range
+            
+            console.log(`Stream clicked at: ${(x*100).toFixed(1)}%, ${(y*100).toFixed(1)}%`);
+            
+            sendCommand('direct_click', {
+                x: x,
+                y: y,
+                timestamp: Date.now()
             });
         });
 
