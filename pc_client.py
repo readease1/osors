@@ -16,10 +16,10 @@ SERVER_URL = 'https://cow714-osrs-controller-221dee6aaaf8.herokuapp.com/'
 
 # Game window coordinates - UPDATED WITH YOUR ACTUAL OSRS WINDOW!
 GAME_WINDOW = {
-    'x': 554,      # Left edge of your OSRS window
-    'y': 26,       # Top edge of your OSRS window  
-    'width': 766,  # Width: 1320 - 554 = 766
-    'height': 456  # Height: 482 - 26 = 456
+    'x': 0,        # Fullscreen starts at 0,0
+    'y': 0,        # Top of screen  
+    'width': 1920, # Full width
+    'height': 1080 # Full height
 }
 
 # Click offset adjustments - MAJOR FIXES NEEDED
