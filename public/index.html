@@ -43,6 +43,55 @@
             opacity: 0.9;
             color: #ffff00;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(145deg, #5d4b37, #4a2c17);
+            border: 2px solid #c9b037;
+            color: #ffff00;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .social-btn:hover {
+            background: linear-gradient(145deg, #c9b037, #b8941f);
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(201, 176, 55, 0.4);
+        }
+
+        .social-btn img {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .twitter-btn:hover {
+            border-color: #1DA1F2;
+            box-shadow: 0 5px 15px rgba(29, 161, 242, 0.3);
+        }
+
+        .pump-btn:hover {
+            border-color: #00ff88;
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
         }
 
         .main-container {
@@ -286,6 +335,17 @@
     <div class="header">
         <h1>⚔️ pump.fun plays OSRS</h1>
         <p>Community-controlled Old School RuneScape adventure!</p>
+        
+        <div class="social-buttons">
+            <a href="https://x.com/pumpplaysosrs" target="_blank" class="social-btn twitter-btn">
+                <img src="https://cdn.prod.website-files.com/6740d85c4e3daeef29a89470/6838de5fb56905c169669b27_61w1Q5OxE2L%20(1).png" alt="Twitter/X">
+                <span>Follow @pumpplaysosrs</span>
+            </a>
+            <a href="https://pump.fun" target="_blank" class="social-btn pump-btn">
+                <img src="https://cdn.prod.website-files.com/6740d85c4e3daeef29a89470/67e09302ce2c79cb6daaebcc_Pump_fun_logo%20(2).png" alt="Pump.fun">
+                <span>Visit pump.fun</span>
+            </a>
+        </div>
     </div>
 
     <div class="main-container">
