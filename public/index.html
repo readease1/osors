@@ -484,6 +484,23 @@
                 timestamp: Date.now()
             });
         });
+        
+        // Right-click support for context menus
+        document.getElementById('stream-overlay').addEventListener('contextmenu', (e) => {
+            e.preventDefault(); // Prevent browser context menu
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            
+            console.log(`Right-click at: ${(x*100).toFixed(1)}%, ${(y*100).toFixed(1)}%`);
+            
+            sendCommand('right_click', {
+                x: x,
+                y: y,
+                timestamp: Date.now()
+            });
+        });
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
